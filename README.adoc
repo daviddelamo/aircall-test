@@ -50,4 +50,31 @@ the Pager doesn’t notify any Target
 and doesn’t set an acknowledgement delay
 ----
 
-== How to handle concurrency problems in Pager DB
+== How to launch the tests
+
+You will need a JDK v11 instaled on your system, once installed run `mvnw clean test` from the root directory
+and check that 5 tests were successfully passed, the output should be something like this:
+[source]
+----
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.test.aircall.AlertNotificationSystemApplicationTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.486 s - in com.test.aircall.AlertNotificationSystemApplicationTests
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.623 s
+[INFO] Finished at: 2021-10-04T09:38:29+02:00
+[INFO] ------------------------------------------------------------------------
+----
+
+== Guarantees from database
+
+To comply with the requirements from product the Database should be ACID compliance or at least had support for Isolated transactions, this way the Database will take care of the consistency of the data losing some performance in the road.
+

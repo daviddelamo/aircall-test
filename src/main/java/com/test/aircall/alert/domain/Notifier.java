@@ -20,12 +20,20 @@ public class Notifier {
     private final SMS SMSAdapter;
     private final Mail mailAdapter;
 
+    private final static String DEFAULT_MESSAGE = "The service %s is down.";
+    private final static Duration DEFAULT_TIMEOUT_DURATION = Duration.ofMinutes(15);
+
+    /**
+     * Notify the alert to the escalation targets and set the timeout for the acknowledgment,
+     * in case there is no more targets for escalation do nothing.
+     * @param monitoredServiceStatus The service that had received the alert.
+     */
     public void notifyTargets(MonitoredService monitoredServiceStatus){
         List<NotificationTarget> notificationTargetList =  escalationPolicy.getNotificationTargetByEscalationLevel(monitoredServiceStatus);
         if (notificationTargetList.size() == 0){
             return;
         }
-        String msg = String.format("The service %s is down.", monitoredServiceStatus.getName());
+        String msg = String.format(DEFAULT_MESSAGE, monitoredServiceStatus.getName());
         notificationTargetList.forEach(notificationTarget -> {
             if (notificationTarget instanceof SMSNotificationTarget) {
                 SMSAdapter.notifyIncident(((SMSNotificationTarget) notificationTarget).getMobileNumber(), msg);
@@ -33,6 +41,6 @@ public class Notifier {
                 mailAdapter.notifyIncident(((EmailNotificationTarget) notificationTarget).getEmail(), msg);
             }
         });
-        timerAdapter.setTimeout(monitoredServiceStatus.getId(), Duration.ofMinutes(15));
+        timerAdapter.setTimeout(monitoredServiceStatus.getId(), DEFAULT_TIMEOUT_DURATION);
     }
 }
